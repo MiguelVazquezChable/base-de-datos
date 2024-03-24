@@ -4,7 +4,7 @@ Description: Plantilla CloudFormation para una instancia de MariaDB en RDS usand
 Parameters:
   DBInstanceClass:
     Type: String
-    Default: "db.t3.micro"  # O la clase que prefieras
+    Default: "db.t3.micro"
   AllocatedStorage:
     Type: Number
     Default: 20
@@ -14,7 +14,7 @@ Parameters:
   MasterUsername:
     Type: String
     Default: "admin"
-  MasterUserPassword:
+  MasterUserPassword: 
     Type: String
     NoEcho: true
 
@@ -30,7 +30,7 @@ Resources:
       MasterUsername: !Ref MasterUsername
       MasterUserPassword: !Ref MasterUserPassword
       VPCSecurityGroups: 
-        - !ImportValue SecurityGroupId
+        - !ImportValue DatabaseSecurityGroupId  # Usando el SG de la DB de la infraestructura
       DBSubnetGroupName: !Ref DBSubnetGroup
       MultiAZ: false
 
