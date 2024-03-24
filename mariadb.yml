@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Plantilla CloudFormation para una instancia de MariaDB en RDS usando recursos de VPC existentes.
+
+Parameters:
+  DBInstanceClass:
+    Type: String
+    Default: "db.t3.micro"  # O la clase que prefieras
+  AllocatedStorage:
+    Type: Number
+    Default: 20
+  DBName:
+    Type: String
+    Default: "ArcesDB"
+  MasterUsername:
+    Type: String
+    Default: "admin"
+  MasterUserPassword:
+    Type: String
+    NoEcho: true
+
+Resources:
+  MariaDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: "mariadb"
+      EngineVersion: "10.4"
+      DBInstanceClass: !Ref DBInstanceClass
+      AllocatedStorage: !Ref AllocatedStorage
+      DBName: !Ref DBName
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      VPCSecurityGroups: 
+        - !ImportValue SecurityGroupId
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      MultiAZ: false
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "Subnet group for MariaDB"
+      SubnetIds:
+        - !ImportValue PrivateSubnet1Id
+        - !ImportValue PrivateSubnet2Id
+
+Outputs:
+  MariaDBInstanceEndpoint:
+    Description: "Endpoint de la instancia de MariaDB"
+    Value: !GetAtt MariaDBInstance.Endpoint.Address
