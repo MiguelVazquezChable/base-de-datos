@@ -33,6 +33,7 @@ Resources:
         - !ImportValue DatabaseSecurityGroupId  # Usando el SG de la DB de la infraestructura
       DBSubnetGroupName: !Ref DBSubnetGroup
       MultiAZ: false
+      PubliclyAccessible: true
 
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
